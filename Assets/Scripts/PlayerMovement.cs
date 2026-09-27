@@ -11,10 +11,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]    float jumpSpeed = 10f;
     
 
+    CapsuleCollider2D myCapsuleCollider;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        myCapsuleCollider = GetComponent<CapsuleCollider2D>();
     }
 
     void Update()
@@ -30,6 +33,10 @@ public class PlayerMovement : MonoBehaviour
 
     void OnJump(InputValue value)
     {
+        if (!myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
+        {
+            return;
+        }
         if (value.isPressed)
         {
             rb.linearVelocity += new Vector2(0f, jumpSpeed);
