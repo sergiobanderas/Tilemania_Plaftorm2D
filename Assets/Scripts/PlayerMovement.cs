@@ -16,6 +16,8 @@ public class PlayerMovement : MonoBehaviour
     CapsuleCollider2D myBodyCollider;
     BoxCollider2D myFeetCollider;
 
+    bool isAlive = true;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -27,18 +29,28 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        Run();   
+        // A dead player can't run, flip or climb
+        if (!isAlive) { return; }
+
+        Run();
         FlipSprite();
         ClimbLadder();
+        Die();
     }
 
     void OnMove(InputValue value)
     {
-        moveInput = value.Get<Vector2>();        
+        // Ignore movement input once the player is dead
+        if (!isAlive) { return; }
+
+        moveInput = value.Get<Vector2>();
     }
 
     void OnJump(InputValue value)
     {
+        // Ignore jump input once the player is dead
+        if (!isAlive) { return; }
+
         if (!myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
         {
             return;
@@ -83,6 +95,17 @@ public class PlayerMovement : MonoBehaviour
         
         bool hasVerticalSpeed = Mathf.Abs(rb.linearVelocity.y) > Mathf.Epsilon;
         animator.SetBool("isClimbing", hasVerticalSpeed);
+    }
+
+    /// <summary>
+    /// Kills the player when its body collider touches anything on the Enemies layer.
+    /// </summary>
+    void Die()
+    {
+        if (myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemies")))
+        {
+            isAlive = false;
+        }
     }
 
 }
