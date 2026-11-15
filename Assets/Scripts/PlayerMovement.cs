@@ -99,12 +99,12 @@ public class PlayerMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Kills the player when its body collider touches anything on the Enemies layer:
+    /// Kills the player when its body collider touches anything on the Enemies or Hazards layers:
     /// plays the Dying animation and launches the player with a death kick.
     /// </summary>
     void Die()
     {
-        if (myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemies")))
+        if (myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemies", "Hazards")))
         {
             isAlive = false;
             animator.SetTrigger("Dying");
