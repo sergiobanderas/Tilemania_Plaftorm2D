@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]    float jumpSpeed = 10f;
     [SerializeField]    float climbSpeed = 5f;
     [SerializeField]    Vector2 deathKick = new Vector2(10f, 20f);
+    [SerializeField]    GameObject bullet;   // Bullet prefab to spawn
+    [SerializeField]    Transform gun;       // Spawn point in front of the player
 
 
     Vector2 moveInput;
@@ -62,6 +64,16 @@ public class PlayerMovement : MonoBehaviour
 
         }
         
+    }
+
+    /// <summary>
+    /// Called by PlayerInput when the Attack action is pressed: spawns a bullet at the gun.
+    /// </summary>
+    void OnAttack(InputValue value)
+    {
+        if (!isAlive) { return; }
+
+        Instantiate(bullet, gun.position, transform.rotation);
     }
 
     void Run()
