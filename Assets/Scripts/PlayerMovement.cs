@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]    float runSpeed = 5f;    
     [SerializeField]    float jumpSpeed = 10f;
     [SerializeField]    float climbSpeed = 5f;
+    [SerializeField]    Vector2 deathKick = new Vector2(10f, 20f);
 
 
     Vector2 moveInput;
@@ -98,13 +99,18 @@ public class PlayerMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Kills the player when its body collider touches anything on the Enemies layer.
+    /// Kills the player when its body collider touches anything on the Enemies layer:
+    /// plays the Dying animation and launches the player with a death kick.
     /// </summary>
     void Die()
     {
         if (myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemies")))
         {
             isAlive = false;
+            animator.SetTrigger("Dying");
+            // Restore gravity in case the player died on a ladder (ClimbLadder sets it to 0)
+            rb.gravityScale = gravityScaleAtStart;
+            rb.linearVelocity = deathKick;
         }
     }
 
